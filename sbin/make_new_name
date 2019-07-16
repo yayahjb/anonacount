@@ -1,0 +1,19 @@
+#!/bin/bash 
+if [[ "${1}xx" == "--helpxx" ]] || [[ "${1}xx" == "xx" ]] || [[ ! -f "${1}" ]]; then
+  echo "make_new_name namelist onamelist"
+  echo "returns a name from namelist followed by a number"
+  echo "such that the new name does not appear in onamelist"
+  echo "onamelist defaults to /etc/passwd"
+  exit
+fi
+if [[ "${2}xx" == "xx" ]]; then
+  onamelist="/etc/passwd"
+else
+  onamelist="${2}"
+fi
+namebase=`shuf -n 1 "${1}"`
+hits=`grep "${namebase}" "${onamelist}" | wc -l`
+hits=$(( $hits + 1 ))
+echo ${namebase}${hits}  
+
+

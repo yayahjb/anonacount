@@ -1,0 +1,60 @@
+#!/bin/bash 
+# make_bulk_anon N
+# makes N+1 anonymous email account and sends instructions to the first one
+# as the instructor handing the block
+if [ "$1"xx == "xx" ]; then
+  N=5
+else
+  N=$1
+fi
+touch /tmp/make_bulk_anon$$
+chmod 700 /tmp/make_bulk_anon$$
+instructor=`/sbin/make_new_name gemstones`
+password=`/sbin/make_new_name gemstones`
+echo "instructor $instructor password $password"
+echo  "Dear Instructor:" >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "We have created a block of $N anonymous email accounts." >> /tmp/make_bulk_anon$$
+echo  "In addition we have given you an extra anonymous email account" >> /tmp/make_bulk_anon$$
+echo  "      ${instructor}@basil.promol.org" >> /tmp/make_bulk_anon$$
+echo  "with initial password" >> /tmp/make_bulk_anon$$
+echo  "      ${password}" >> /tmp/make_bulk_anon$$
+echo  "which is also the initial password for each of the student accounts." >> /tmp/make_bulk_anon$$
+echo  "This password must be changed by the intended account holder on first" >> /tmp/make_bulk_anon$$
+echo  "login." >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "In order to ensure anonymity and comply with humans subjects protections" >> /tmp/make_bulk_anon$$
+echo  "please comply with the following guidance:" >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "Each student should do their own initial password change.  You should" >> /tmp/make_bulk_anon$$
+echo  "not access any student account other than to send them email" >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "No anonymous student account should be set up for forwarding to another" >> /tmp/make_bulk_anon$$
+echo  "account or from another account." >> /tmp/make_bulk_anon$$
+echo  "" >> /tmp/make_bulk_anon$$
+echo  "Only you should have a record of which anonymous account is associated" >> /tmp/make_bulk_anon$$
+echo  "with which student, and you should keep that record as secure as all" >> /tmp/make_bulk_anon$$
+echo  "research records to be blinded.  Please do _not_ send us a copy of" >> /tmp/make_bulk_anon$$
+echo  "this information.  Keep appropriate backup copies in a manner approved" >> /tmp/make_bulk_anon$$
+echo  "by the relevant IRB applicable to your institution, but separate from" >> /tmp/make_bulk_anon$$
+echo  "other backups for this project.  We want to limit the scope of any security" >> /tmp/make_bulk_anon$$
+echo  "breach and the time and effort to mitigate the damage."  >> /tmp/make_bulk_anon$$
+echo  ""  >> /tmp/make_bulk_anon$$
+echo  "The student accounts are:" >> /tmp/make_bulk_anon$$
+echo "" >> /tmp/make_bulk_anon$$
+
+useradd -U -m  "${instructor}"
+echo ${instructor}:${password} | chpasswd
+passwd -e ${instructor}
+for i in `seq 1 ${N}`; do
+student=`/sbin/make_new_name gemstones`
+useradd -U -m  "${student}"
+echo ${student}:${password} | chpasswd
+passwd -e ${student}
+echo  "      ${student}@basil.promol.org" >> /tmp/make_bulk_anon$$
+done
+mail -s "anonymous email" ${instructor}@basil.promol.org < /tmp/make_bulk_anon$$
+mail -s "anonymous email" root@basil.promol.org < /tmp/make_bulk_anon$$
+rm -rf /tmp/make_bulk_anon$$  
+
